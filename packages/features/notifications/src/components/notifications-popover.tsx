@@ -1,0 +1,339 @@
+'use client';
+
+/**
+ * Componente de Notificaciones
+ * 
+ * CAMBIOS REALIZADOS:
+ * - Se eliminó completamente la visualización de burbuja (bubble) del componente
+ * - Se removieron los estilos CSS asociados a la burbuja
+ * - Se eliminó la lógica relacionada con las notificaciones flotantes (toast)
+ * - Se mantuvo la funcionalidad de marcar notificaciones como "dismissed" al hacer click en X
+ * - Se optimizó el código para mantener solo la funcionalidad esencial
+*/
+
+/**  Popover de notificaciones. Función: Muestra lista en tiempo real, permite descartar y reproduce sonido en nuevas. */
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { Bell, CircleAlert, Info, TriangleAlert, XIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+import { Database } from '@kit/supabase/database';
+import { Button } from '@kit/ui/button';
+import { If } from '@kit/ui/if';
+import { Popover, PopoverContent, PopoverTrigger } from '@kit/ui/popover';
+import { Separator } from '@kit/ui/separator';
+import { cn } from '@kit/ui/utils';
+
+import { useDismissNotification, useFetchNotifications } from '../hooks';
+import { useSupabase } from '@kit/supabase/hooks/use-supabase';
+
+type Notification = Database['public']['Tables']['notifications']['Row'];
+
+type PartialNotification = Pick<
+  Notification,
+  'id' | 'body' | 'dismissed' | 'type' | 'created_at' | 'link'
+>;
+
+export function NotificationsPopover(params: {
+  realtime: boolean;
+  accountIds: string[];
+  onClick?: (notification: PartialNotification) => void;
+}) {
+  const { i18n, t } = useTranslation();
+  const client = useSupabase();
+  const audioCtxRef = useRef<any>(null);
+  const playNotificationSound = useCallback(() => {
+    try {
+      const AC = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!AC) return;
+      const ctx = audioCtxRef.current ?? new AC();
+      audioCtxRef.current = ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch {}
+  }, []);
+
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<PartialNotification[]>([]);
+
+  const onNotifications = useCallback(
+    (notifications: PartialNotification[]) => {
+      // Actualizar las notificaciones del popover
+      setNotifications((existing) => {
+        // Crear un mapa de notificaciones existentes por ID para facilitar la actualización
+        const existingMap = new Map(existing.map(n => [n.id, n]));
+        
+        // Filtrar y actualizar notificaciones
+        const updatedNotifications = [...existing];
+        const newNotifications: PartialNotification[] = [];
+        
+        notifications.forEach(notification => {
+          // Si la notificación ya existe, actualizarla
+          if (existingMap.has(notification.id)) {
+            const index = updatedNotifications.findIndex(n => n.id === notification.id);
+            if (index !== -1) {
+              // Si está marcada como descartada, eliminarla
+              if (notification.dismissed) {
+                updatedNotifications.splice(index, 1);
+              } else {
+                // Actualizar la notificación existente
+                updatedNotifications[index] = notification;
+              }
+            }
+          } else if (!notification.dismissed) {
+            // Si es nueva y no está descartada, agregarla
+            newNotifications.push(notification);
+          }
+        });
+        
+        const next = [...newNotifications, ...updatedNotifications];
+        if (newNotifications.length > 0) {
+          playNotificationSound();
+        }
+        return next;
+      });
+    },
+    [playNotificationSound],
+  );
+
+  const dismissNotification = useDismissNotification();
+
+  useFetchNotifications({
+    onNotifications,
+    accountIds: params.accountIds,
+    realtime: params.realtime,
+  });
+
+  useEffect(() => {
+    const ref = setInterval(async () => {
+      try {
+        const { data } = await client
+          .from('notifications')
+          .select(
+            `id, 
+             body, 
+             dismissed, 
+             type, 
+             created_at, 
+             link`
+          )
+          .in('account_id', params.accountIds)
+          .eq('dismissed', false)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        if (data) {
+          onNotifications(data as PartialNotification[]);
+        }
+      } catch { }
+    }, 2000);
+    return () => {
+      clearInterval(ref);
+    };
+  }, [client, params.accountIds, onNotifications]);
+
+  const timeAgo = (createdAt: string) => {
+    const date = new Date(createdAt);
+
+    let time: number;
+
+    const daysAgo = Math.floor(
+      (new Date().getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    const formatter = new Intl.RelativeTimeFormat(i18n.language, {
+      numeric: 'auto',
+    });
+
+    if (daysAgo < 1) {
+      time = Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60));
+
+      if (time < 5) {
+        return t('common:justNow');
+      }
+
+      if (time < 60) {
+        return formatter.format(-time, 'minute');
+      }
+
+      const hours = Math.floor(time / 60);
+
+      return formatter.format(-hours, 'hour');
+    }
+
+    const unit = (() => {
+      const minutesAgo = Math.floor(
+        (new Date().getTime() - date.getTime()) / (1000 * 60),
+      );
+
+      if (minutesAgo <= 60) {
+        return 'minute';
+      }
+
+      if (daysAgo <= 1) {
+        return 'hour';
+      }
+
+      if (daysAgo <= 30) {
+        return 'day';
+      }
+
+      if (daysAgo <= 365) {
+        return 'month';
+      }
+
+      return 'year';
+    })();
+
+    const text = formatter.format(-daysAgo, unit);
+
+    return text.slice(0, 1).toUpperCase() + text.slice(1);
+  };
+
+  useEffect(() => {
+    return () => {
+      setNotifications([]);
+    };
+  }, []);
+
+  return (
+    <Popover modal open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button className={'relative h-9 w-9'} variant={'ghost'}>
+          <Bell className={'min-h-6 min-w-6'} />
+
+          <span
+            className={cn(
+              `fade-in animate-in zoom-in absolute right-1 top-1 mt-0 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[0.65rem] text-white`,
+              {
+                hidden: !notifications.length,
+              },
+            )}
+          >
+            {notifications.length}
+          </span>
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent
+        className={'flex w-full max-w-96 flex-col p-0 lg:min-w-64'}
+        align={'start'}
+        collisionPadding={20}
+        sideOffset={10}
+      >
+        <div className={'flex items-center px-3 py-2 text-sm font-semibold'}>
+          {t('common:notifications')}
+        </div>
+
+        <Separator />
+
+        <If condition={!notifications.length}>
+          <div className={'px-3 py-2 text-sm'}>
+            {t('common:noNotifications')}
+          </div>
+        </If>
+
+        <div
+          className={
+            'flex max-h-[60vh] flex-col divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800'
+          }
+        >
+          {notifications.map((notification) => {
+            const maxChars = 100;
+
+            let body = t(notification.body, {
+              defaultValue: notification.body,
+            });
+
+            if (body.length > maxChars) {
+              body = body.substring(0, maxChars) + '...';
+            }
+
+            const Icon = () => {
+              switch (notification.type) {
+                case 'warning':
+                  return <TriangleAlert className={'h-4 text-yellow-500'} />;
+                case 'error':
+                  return <CircleAlert className={'text-destructive h-4'} />;
+                default:
+                  return <Info className={'h-4 text-blue-500'} />;
+              }
+            };
+
+            return (
+              <div
+                key={notification.id.toString()}
+                className={cn(
+                  'min-h-18 flex flex-col items-start justify-center gap-y-1 px-3 py-2',
+                )}
+                onClick={() => {
+                  if (params.onClick) {
+                    params.onClick(notification);
+                  }
+                }}
+              >
+                <div className={'flex w-full items-start justify-between'}>
+                  <div
+                    className={'flex items-start justify-start gap-x-3 py-2'}
+                  >
+                    <div className={'py-0.5'}>
+                      <Icon />
+                    </div>
+
+                    <div className={'flex flex-col space-y-1'}>
+                      <div className={'text-sm'}>
+                        <If condition={notification.link} fallback={body}>
+                          {(link) => (
+                            <a href={link} className={'hover:underline'}>
+                              {body}
+                            </a>
+                          )}
+                        </If>
+                      </div>
+
+                      <span className={'text-muted-foreground text-xs'}>
+                        {timeAgo(notification.created_at)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={'py-2'}>
+                    <Button
+                      className={'max-h-6 max-w-6'}
+                      size={'icon'}
+                      variant={'ghost'}
+                      onClick={async () => {
+                        try {
+                          await dismissNotification(notification.id);
+                          setNotifications((existing) => {
+                            return existing.filter(
+                              (existingNotification) =>
+                                existingNotification.id !== notification.id,
+                            );
+                          });
+                        } catch (e) {
+                          console.error('Failed to dismiss notification', e);
+                        }
+                      }}
+                    >
+                      <XIcon className={'h-3'} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}

@@ -1,0 +1,39 @@
+{
+  "extends": "@kit/tsconfig/base.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/app/*": ["./app/*"],
+      "@/app/home/(user)/dashboard/*": ["./app/home/(user)/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "~/*": ["./app/*"],
+      "~/config/*": ["./config/*"],
+      "~/components/*": ["./components/*"],
+      "~/lib/*": ["./lib/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2015",
+    "downlevelIteration": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "*.ts",
+    "*.tsx",
+    "./config/**/*.ts",
+    "components/**/*",
+    "lib/**/*.ts",
+    "app"
+  ],
+  "exclude": ["node_modules", ".next"]
+}
