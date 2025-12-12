@@ -1,0 +1,298 @@
+{
+  "categorias": {
+    "backend": {
+      "keywords": [
+        "jwt",
+        "rbac",
+        "autenticación",
+        "autorización",
+        "middleware",
+        "interceptor",
+        "dto",
+        "rest",
+        "controller",
+        "service",
+        "repository",
+        "spring",
+        "spring boot",
+        "node",
+        "nest",
+        "express"
+      ]
+    },
+    "frontend": {
+      "keywords": [
+        "react",
+        "next",
+        "hooks",
+        "componentes",
+        "useeffect",
+        "usecallback",
+        "usememo",
+        "tailwind",
+        "tailwindcss",
+        "shadcn",
+        "ui",
+        "estado",
+        "error boundary"
+      ]
+    },
+    "arquitectura": {
+      "keywords": [
+        "multi-tenant",
+        "multi‑tenant",
+        "saas",
+        "microservicios",
+        "eventos",
+        "orientada a eventos",
+        "arquitectura",
+        "api escalable"
+      ]
+    },
+    "devops": {
+      "keywords": [
+        "docker",
+        "ci",
+        "cd",
+        "pipeline",
+        "cicd",
+        "vercel",
+        "deploy",
+        "despliegue"
+      ]
+    },
+    "patrones": {
+      "keywords": [
+        "dto",
+        "middleware",
+        "interceptor",
+        "idempotente",
+        "rbac",
+        "jwt",
+        "rest"
+      ]
+    },
+    "sql": {
+      "keywords": [
+        "sql",
+        "postgresql",
+        "rls",
+        "índice",
+        "indice",
+        "normalización",
+        "normalizacion",
+        "transacción",
+        "transaccion",
+        "consulta",
+        "optimización",
+        "optimizacion",
+        "explain"
+      ]
+    },
+    "tiempo_real": {
+      "keywords": [
+        "websocket",
+        "websockets",
+        "tiempo real"
+      ]
+    }
+  },
+  "preguntas": [
+    {
+      "pregunta": "¿Qué es una arquitectura multi-tenant y cómo la implementaste?",
+      "respuesta": "Una arquitectura multi-tenant permite que múltiples clientes usen la misma aplicación con datos aislados. La implementé usando Spring Boot y PostgreSQL con RLS. El tenantId va en el JWT y el backend lo extrae para aplicar filtrado por tenant antes de ejecutar la lógica."
+    },
+    {
+      "pregunta": "¿Qué es RLS en PostgreSQL y por qué lo usaste?",
+      "respuesta": "RLS (Row-Level Security) aplica políticas de seguridad por fila. Lo usé para asegurar que cada tenant solo acceda a sus propios datos, reforzando el aislamiento incluso si alguien manipula una consulta."
+    },
+    {
+      "pregunta": "¿Cómo resolviste el contexto del tenant en cada request?",
+      "respuesta": "Incluyo el tenantId en el JWT. En cada request el backend valida el token, extrae el tenantId y establece ese contexto para aplicar políticas de acceso y consultas filtradas."
+    },
+    {
+      "pregunta": "¿Qué es RBAC y cómo lo implementaste?",
+      "respuesta": "RBAC controla permisos basados en roles. En mi plataforma cada usuario tiene un rol dentro del JWT. Antes de llegar al controlador verifico permisos según el rol para permitir o bloquear acceso."
+    },
+    {
+      "pregunta": "¿Cómo manejas autenticación con JWT?",
+      "respuesta": "Genero un token con datos del usuario y rol. En cada request verifico firma, expiración y permisos antes de permitir acceso al endpoint."
+    },
+    {
+      "pregunta": "¿Cuál es la diferencia entre autenticación y autorización?",
+      "respuesta": "Autenticación confirma identidad; autorización define qué acciones puede realizar ese usuario."
+    },
+    {
+      "pregunta": "¿Qué es un middleware de autenticación?",
+      "respuesta": "Es una función que corre antes del controlador para validar el JWT, verificar expiración y decidir si la petición continúa o se bloquea."
+    },
+    {
+      "pregunta": "¿Por qué una API REST debe ser stateless?",
+      "respuesta": "Para que cada request sea independiente y escalable. El servidor no guarda estado; el cliente envía todo lo necesario en cada petición."
+    },
+    {
+      "pregunta": "¿Cómo estructuraste tus APIs REST en Spring Boot?",
+      "respuesta": "Organizo en controladores, servicios y repositorios. Uso validaciones, manejadores de errores globales y filtros para autenticación y permisos."
+    },
+    {
+      "pregunta": "¿Qué diferencia hay entre PUT y PATCH?",
+      "respuesta": "PUT reemplaza el recurso completo; PATCH actualiza solo parte del recurso."
+    },
+    {
+      "pregunta": "¿Qué es un endpoint idempotente?",
+      "respuesta": "Es un endpoint que produce el mismo resultado aunque se ejecute varias veces. GET, PUT y DELETE lo son."
+    },
+    {
+      "pregunta": "¿Qué es un WebSocket y cuándo lo usarías?",
+      "respuesta": "Es un protocolo bidireccional de tiempo real con conexión abierta. Lo uso para notificaciones en vivo, chats o sincronización instantánea."
+    },
+    {
+      "pregunta": "¿Qué diferencia hay entre REST y WebSockets?",
+      "respuesta": "REST es petición-respuesta y stateless. WebSockets mantienen una conexión abierta y permiten comunicación en tiempo real."
+    },
+    {
+      "pregunta": "¿Cómo integraste WebSockets en tu plataforma SaaS?",
+      "respuesta": "Uso WebSockets para notificar cambios en registros y actualizar la UI sin recargar, sincronizando eventos entre cliente y servidor."
+    },
+    {
+      "pregunta": "¿Cómo manejas errores en frontend?",
+      "respuesta": "Centralizo las llamadas a APIs en servicios usando try/catch, interpreto la respuesta y muestro mensajes claros sin romper la UI."
+    },
+    {
+      "pregunta": "¿Cómo manejas errores en backend?",
+      "respuesta": "Uso un manejador global de excepciones que retorna mensajes claros con códigos HTTP adecuados."
+    },
+    {
+      "pregunta": "¿Qué es input validation y cómo lo aplicas?",
+      "respuesta": "Valido datos en frontend usando TypeScript y validadores; en backend uso anotaciones y validadores para evitar datos inválidos."
+    },
+    {
+      "pregunta": "¿Qué es un DTO?",
+      "respuesta": "Es un objeto que define la estructura de datos a recibir o enviar. Ayuda a validar, tipar y mantener separada la lógica interna de los datos de entrada."
+    },
+    {
+      "pregunta": "¿Qué es un interceptor?",
+      "respuesta": "Es un componente que puede ejecutar lógica antes y después del controlador, útil para logging, métricas o transformar respuestas."
+    },
+    {
+      "pregunta": "¿Qué es un middleware?",
+      "respuesta": "Una función que se ejecuta antes del controlador para validar, autenticar o transformar `req` y `res`"
+    },
+    {
+      "pregunta": "¿Qué diferencia hay entre un middleware y un interceptor?",
+      "respuesta": "El middleware actúa antes del controlador; el interceptor envuelve el proceso y puede actuar antes y después."
+    },
+    {
+      "pregunta": "¿Cómo estructuraste tu frontend en React?",
+      "respuesta": "De forma modular: components, hooks, services, types, utils, context y pages. Cada componente tiene su carpeta y lógica aislada."
+    },
+    {
+      "pregunta": "¿Cómo manejas estado en React?",
+      "respuesta": "Uso useState para estados simples y useReducer o context cuando el estado es compartido o más complejo."
+    },
+    {
+      "pregunta": "¿Qué es un custom hook?",
+      "respuesta": "Es una función reutilizable que encapsula lógica de React como llamadas a APIs o manejo de formularios."
+    },
+    {
+      "pregunta": "¿Para qué sirve useEffect?",
+      "respuesta": "Para ejecutar efectos secundarios como llamadas a APIs o suscripciones después del render."
+    },
+    {
+      "pregunta": "¿Para qué sirve useCallback?",
+      "respuesta": "Para memorizar funciones y evitar recrearlas innecesariamente en renders."
+    },
+    {
+      "pregunta": "¿Qué es useMemo?",
+      "respuesta": "Memoriza el resultado de una operación costosa para evitar recalcularla en cada render."
+    },
+    {
+      "pregunta": "¿Qué es TypeScript strict typing?",
+      "respuesta": "Es el modo estricto que ayuda a detectar errores antes de runtime asegurando tipos fuertes en todo el proyecto."
+    },
+    {
+      "pregunta": "¿Por qué usar TailwindCSS?",
+      "respuesta": "Permite crear interfaces rápidas, consistentes y optimizadas sin escribir CSS repetitivo."
+    },
+    {
+      "pregunta": "¿Qué es shadcn/ui?",
+      "respuesta": "Es una librería de componentes estilizados y accesibles basada en TailwindCSS que permite personalización completa."
+    },
+    {
+      "pregunta": "¿Qué es la pila PERN?",
+      "respuesta": "PostgreSQL, Express, React y Node.js. Es una pila full stack para crear aplicaciones web completas."
+    },
+    {
+      "pregunta": "¿Cómo integraste Stripe en tu proyecto?",
+      "respuesta": "Usé la API de Stripe para pagos seguros, validación en tiempo real y facturación automática."
+    },
+    {
+      "pregunta": "¿Qué es un índice en SQL?",
+      "respuesta": "Una estructura que acelera búsquedas sin escanear toda la tabla."
+    },
+    {
+      "pregunta": "¿Cómo optimizarías una consulta SQL?",
+      "respuesta": "Uso EXPLAIN, reviso índices, reduzco columnas innecesarias y evalúo normalización o particiones."
+    },
+    {
+      "pregunta": "¿Qué es normalización?",
+      "respuesta": "Es organizar la base de datos para eliminar duplicación y mantener consistencia."
+    },
+    {
+      "pregunta": "¿Qué es una transacción?",
+      "respuesta": "Un conjunto de operaciones que se ejecutan como una unidad: si una falla, se revertían todas."
+    },
+    {
+      "pregunta": "¿Qué es Docker y para qué lo usas?",
+      "respuesta": "Docker empaqueta aplicaciones con sus dependencias en contenedores portables y reproducibles."
+    },
+    {
+      "pregunta": "¿Qué es un pipeline CI/CD?",
+      "respuesta": "Una secuencia automatizada de pasos para testear, construir y desplegar código."
+    },
+    {
+      "pregunta": "¿Qué es GitFlow?",
+      "respuesta": "Una estrategia de ramas para organizar desarrollo, features, releases y hotfixes."
+    },
+    {
+      "pregunta": "¿Qué es WebSockets?",
+      "respuesta": "Un protocolo bidireccional para tiempo real con conexión persistente."
+    },
+    {
+      "pregunta": "¿Qué son microservicios?",
+      "respuesta": "Una arquitectura donde la app se divide en servicios independientes que se despliegan por separado."
+    },
+    {
+      "pregunta": "¿Qué es una arquitectura orientada a eventos?",
+      "respuesta": "Un modelo donde los componentes reaccionan a eventos para desacoplar flujos y mejorar escalabilidad."
+    },
+    {
+      "pregunta": "¿Qué es un error boundary en React?",
+      "respuesta": "Un componente que captura errores de render para evitar que la app se bloquee."
+    },
+    {
+      "pregunta": "¿Qué es la validación del lado del cliente?",
+      "respuesta": "Es validar datos en frontend para evitar enviar información incorrecta al servidor."
+    },
+    {
+      "pregunta": "¿Qué es la validación del lado del servidor?",
+      "respuesta": "El backend valida la estructura y valores de la petición antes de procesarla."
+    },
+    {
+      "pregunta": "¿Qué es un endpoint?",
+      "respuesta": "Una ruta específica de una API que permite realizar operaciones como crear, leer, actualizar o eliminar datos."
+    },
+    {
+      "pregunta": "¿Qué es SQL Optimization?",
+      "respuesta": "Es el proceso de ajustar consultas, índices y estructura para mejorar rendimiento."
+    },
+    {
+      "pregunta": "¿Qué es una API escalable?",
+      "respuesta": "Una API capaz de manejar crecimiento de tráfico sin perder rendimiento."
+    },
+    {
+      "pregunta": "¿Qué significa despliegue en Vercel?",
+      "respuesta": "Compilar y publicar aplicaciones frontend optimizadas con CI/CD integrado."
+    }
+  ]
+}
