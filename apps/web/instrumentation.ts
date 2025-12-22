@@ -5,16 +5,15 @@
 import { type Instrumentation } from 'next';
 
 export async function register() {
-  if (process?.setMaxListeners && process.env.NODE_ENV !== 'production') {
-    process.setMaxListeners(30);
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    if (process.env.NODE_ENV !== 'production') {
+      process.setMaxListeners(30);
+    }
+    const { registerMonitoringInstrumentation } = await import(
+      '@kit/monitoring/instrumentation'
+    );
+    await registerMonitoringInstrumentation();
   }
-  const { registerMonitoringInstrumentation } = await import(
-    '@kit/monitoring/instrumentation'
-  );
-
-  // Register monitoring instrumentation
-  // based on the MONITORING_PROVIDER environment variable.
-  await registerMonitoringInstrumentation();
 }
 
 /**
