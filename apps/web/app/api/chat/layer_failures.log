@@ -1,0 +1,3 @@
+[2025-12-12T19:10:32.849Z] persona fail (no_match) :: tienes proyectos personales
+[2025-12-12T19:10:32.860Z] predic fail (score=0) :: tienes proyectos personales
+[2025-12-12T19:10:34.662Z] llm fail (This operation was aborted) :: tienes proyectos personales

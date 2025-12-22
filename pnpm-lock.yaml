@@ -202,8 +202,8 @@ importers:
         specifier: ^0.18.5
         version: 0.18.5
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
     devDependencies:
       '@kit/eslint-config':
         specifier: workspace:*
@@ -299,8 +299,8 @@ importers:
         specifier: workspace:*
         version: link:../../ui
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/billing/gateway:
     devDependencies:
@@ -359,8 +359,8 @@ importers:
         specifier: ^15.7.2
         version: 15.7.2(i18next@25.4.2(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/billing/lemon-squeezy:
     dependencies:
@@ -399,8 +399,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/billing/stripe:
     dependencies:
@@ -448,8 +448,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/cms/core:
     devDependencies:
@@ -515,8 +515,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/cms/types:
     devDependencies:
@@ -590,8 +590,8 @@ importers:
         specifier: 2.55.0
         version: 2.55.0
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/email-templates:
     dependencies:
@@ -694,8 +694,8 @@ importers:
         specifier: ^15.7.2
         version: 15.7.2(i18next@25.4.2(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/features/admin:
     devDependencies:
@@ -757,8 +757,8 @@ importers:
         specifier: ^7.62.0
         version: 7.62.0(react@19.1.1)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/features/auth:
     devDependencies:
@@ -814,8 +814,8 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/features/notifications:
     devDependencies:
@@ -944,8 +944,8 @@ importers:
         specifier: ^15.7.2
         version: 15.7.2(i18next@25.4.2(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/i18n:
     dependencies:
@@ -1014,8 +1014,8 @@ importers:
         specifier: ^24.3.0
         version: 24.3.0
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/mailers/nodemailer:
     dependencies:
@@ -1039,8 +1039,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/mailers/resend:
     devDependencies:
@@ -1060,8 +1060,8 @@ importers:
         specifier: ^24.3.0
         version: 24.3.0
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/mailers/shared:
     devDependencies:
@@ -1075,8 +1075,8 @@ importers:
         specifier: workspace:*
         version: link:../../../tooling/typescript
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/monitoring/api:
     devDependencies:
@@ -1108,8 +1108,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/monitoring/baselime:
     dependencies:
@@ -1139,8 +1139,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/monitoring/core:
     devDependencies:
@@ -1215,8 +1215,8 @@ importers:
         specifier: 15.5.0
         version: 15.5.0(@opentelemetry/api@1.9.0)(@playwright/test@1.55.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/otp:
     devDependencies:
@@ -1272,8 +1272,8 @@ importers:
         specifier: ^7.62.0
         version: 7.62.0(react@19.1.1)
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/shared:
     dependencies:
@@ -1327,8 +1327,8 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   packages/ui:
     dependencies:
@@ -1433,8 +1433,8 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
       zod:
-        specifier: ^3.25.74
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
 
   tooling/eslint:
     dependencies:
@@ -9407,8 +9407,8 @@ packages:
   zlibjs@0.3.1:
     resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -19079,6 +19079,6 @@ snapshots:
 
   zlibjs@0.3.1: {}
 
-  zod@3.25.76: {}
+  zod@4.1.13: {}
 
   zwitch@2.0.4: {}
