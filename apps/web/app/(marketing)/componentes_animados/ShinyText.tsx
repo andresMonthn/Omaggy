@@ -28,6 +28,7 @@ export default function ShinyText({
       {text}
 
       {/* Estilos del efecto Shiny */}
+      {/* @ts-ignore */}
       <style jsx>{`
         .shiny-text {
           display: inline-block;

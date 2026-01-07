@@ -7,6 +7,7 @@ import { Download } from 'lucide-react';
 import { useChat } from './hooks/useChat';
 import { MessageBubble } from './components/MessageBubble';
 import { ChatInput } from './components/ChatInput';
+import { Button } from './components/Button';
 
 export default function ChatAIPage() {
   const { messages, pending, send, downloadConversation } = useChat();
@@ -48,13 +49,13 @@ export default function ChatAIPage() {
       <main className="relative z-10 flex flex-col flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {hasMessages && (
           <div className="absolute top-0 right-4 sm:right-8 z-30 mt-4">
-            <button
+            <Button
               onClick={downloadConversation}
-              className="p-2 text-neutral-400 hover:text-white bg-[#1a1a1a]/80 hover:bg-[#222] backdrop-blur-sm border border-white/10 rounded-full transition-colors"
+              variant="neutral"
+              size="sm"
+              iconLeft={<Download className="w-4 h-4" />}
               title="Descargar conversación"
-            >
-              <Download className="w-5 h-5" />
-            </button>
+            />
           </div>
         )}
         {/* Messages Area */}

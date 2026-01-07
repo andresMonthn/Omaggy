@@ -54,3 +54,14 @@ yarn-error.log*
 
 # ts-node cache
 node-compile-cache/
+
+# Electron
+electron/dist/
+electron/dist-builder/
+*.exe
+*.dmg
+*.zip
+*.dll
+*.app
+*.iso
+

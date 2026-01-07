@@ -215,7 +215,7 @@ export function AccountSelector({
                       )}
                       key={account.value}
                       value={account.value ?? ''}
-                      onSelect={(currentValue) => {
+                      onSelect={(currentValue: string) => {
                         setOpen(false);
 
                         if (onAccountChange) {

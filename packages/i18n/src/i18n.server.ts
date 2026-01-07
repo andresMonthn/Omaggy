@@ -20,7 +20,7 @@ export async function initializeServerI18n(
   await new Promise((resolve) => {
     void i18nInstance
       .use(
-        resourcesToBackend(async (language, namespace, callback) => {
+        resourcesToBackend(async (language: string, namespace: string, callback: any) => {
           try {
             const data = await resolver(language, namespace);
             loadedNamespaces.add(namespace);

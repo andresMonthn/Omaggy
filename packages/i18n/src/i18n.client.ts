@@ -25,7 +25,7 @@ export async function initializeI18nClient(
 
   await i18next
     .use(
-      resourcesToBackend(async (language, namespace, callback) => {
+      resourcesToBackend(async (language: string, namespace: string, callback: any) => {
         const data = await resolver(language, namespace);
 
         if (!loadedLanguages.includes(language)) {

@@ -26,7 +26,7 @@ export function CaptchaTokenSetter(props: {
 
   return (
     <Turnstile
-      ref={(instance) => {
+      ref={(instance: any) => {
         if (instance) {
           setInstance(instance);
         }

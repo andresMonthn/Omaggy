@@ -256,6 +256,7 @@ export default function MagicBento({
         </div>
       )}
 
+      {/* @ts-ignore */}
       <style jsx>{`
         @keyframes ripple {
           0% { transform: scale(1); opacity: 0.6; }

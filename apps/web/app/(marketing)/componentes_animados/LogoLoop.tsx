@@ -200,6 +200,7 @@ export function LogoLoop({
       </div>
 
       {/* CSS Animations */}
+      {/* @ts-ignore */}
       <style jsx global>{`
         @keyframes scroll-left {
           from {

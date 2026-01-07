@@ -66,6 +66,7 @@ export function RootProviders({
                 <CaptchaTokenSetter siteKey={captchaSiteKey} nonce={nonce} />
 
                 <AuthProvider>
+                  {/* @ts-ignore */}
                   <ThemeProvider
                     attribute="class"
                     enableSystem

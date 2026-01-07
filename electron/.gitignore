@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-builder
+*.exe
+*.dmg
+*.zip
+*.dll
+*.app
+*.iso

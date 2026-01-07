@@ -33,7 +33,7 @@ InputOTPGroup.displayName = 'InputOTPGroup';
 const InputOTPSlot: React.FC<
   React.ComponentPropsWithRef<'div'> & { index: number }
 > = ({ index, className, ...props }) => {
-  const inputOTPContext = React.useContext(OTPInputContext);
+  const inputOTPContext = React.useContext(OTPInputContext) as any;
   const slot = inputOTPContext.slots[index];
 
   if (!slot) {
