@@ -5,6 +5,8 @@ function createWindow () {
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
+    transparent: true,
+    backgroundColor: '#00FFFFFF', // Transparent
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }

@@ -1,5 +1,5 @@
 import { memo, useState, useCallback } from 'react';
-import { Plus, Mic, AudioLines } from 'lucide-react';
+import {  Mic, AudioLines } from 'lucide-react';
 
 export const ChatInput = memo(function ChatInput({
   onSend,
@@ -29,7 +29,7 @@ export const ChatInput = memo(function ChatInput({
           className="p-3 sm:p-4 text-neutral-400 hover:text-white transition-colors rounded-full"
           aria-label="Add attachment"
         >
-          <Plus className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} />
+        
         </button>
 
         <input

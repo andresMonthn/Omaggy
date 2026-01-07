@@ -1,10 +1,11 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'neutral' | 'primary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
+  toggleTransparency?: boolean;
 };
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -12,10 +13,17 @@ function cx(...classes: Array<string | false | null | undefined>) {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = 'neutral', size = 'md', iconLeft, iconRight, disabled, children, ...props },
+  { className, variant = 'neutral', size = 'md', iconLeft, iconRight, disabled, children, toggleTransparency, onClick, ...props },
   ref
 ) {
   const base = 'inline-flex items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white/20';
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (toggleTransparency) {
+      document.body.classList.toggle('transparent-mode');
+    }
+    if (onClick) onClick(e);
+  };
 
   const variantCls =
     variant === 'primary'
@@ -38,6 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       className={cx(base, variantCls, sizeCls, disabledCls, className)}
       disabled={disabled}
+      onClick={handleClick}
       {...props}
     >
       {iconLeft ? <span className="mr-2">{iconLeft}</span> : null}

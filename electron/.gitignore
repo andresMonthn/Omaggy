@@ -1,5 +1,6 @@
 node_modules
 dist
+dist_v2
 dist-builder
 *.exe
 *.dmg
