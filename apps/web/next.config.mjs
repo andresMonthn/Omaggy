@@ -27,11 +27,10 @@ const config = {
   productionBrowserSourceMaps: false,
   // Attempt to ignore source map warnings in dev
   webpack: (config, { dev }) => {
-    if (dev) {
-      config.ignoreWarnings = [
-        { module: /node_modules/, message: /Failed to parse source map/ },
-      ];
-    }
+    config.ignoreWarnings = [
+      { module: /node_modules/, message: /Failed to parse source map/ },
+      { module: /node_modules/, message: /Critical dependency/ },
+    ];
     return config;
   },
 };

@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Download, Menu } from 'lucide-react';
+import { Download, Menu, Eye, EyeOff } from 'lucide-react';
 
 import { useChat } from './hooks/useChat';
 import { MessageBubble } from './components/MessageBubble';
@@ -46,35 +46,46 @@ export default function ChatAIPage() {
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}
         >
-          <MessageBubble m={m} pending={pending} />
+          <MessageBubble m={m} pending={pending} isTransparentMode={isTransparent} />
         </motion.div>
       );
     });
-  }, [deferredMessages, pending]);
+  }, [deferredMessages, pending, isTransparent]);
 
   return (
-    <div className="relative flex min-h-screen bg-[#111] text-white overflow-hidden font-sans">
+    <div className="relative flex min-h-screen bg-transparent text-white overflow-hidden font-sans">
       
-      {/* Sidebar Toggle - Moved outside of main content to be always top-left relative to screen */}
-      <div className="absolute top-4 left-4 z-50">
-           <AnimatePresence>
-               {!isSidebarOpen && (
-                  <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                  >
-                      <Button
-                          onClick={() => setIsSidebarOpen(true)}
-                          variant="neutral"
-                          size="sm"
-                          iconLeft={<Menu className="w-4 h-4" />}
-                          title="Abrir menú"
-                      />
-                  </motion.div>
-               )}
-           </AnimatePresence>
-      </div>
+      {/* Draggable Background Area - Allows moving the frameless window */}
+      <div 
+        className="fixed inset-0 z-0" 
+        style={{ WebkitAppRegion: 'drag' } as any} 
+      />
+
+      {/* Sidebar Toggle - Dynamic position based on sidebar state */}
+      <motion.div 
+        className="absolute top-4 z-50"
+        initial={false}
+        animate={{ left: isSidebarOpen ? 280 + 16 : 16 }}
+        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+        style={{ WebkitAppRegion: 'no-drag' } as any}
+      >
+        <div className="flex gap-2">
+          <Button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              variant="neutral"
+              size="sm"
+              iconLeft={isSidebarOpen ? <Menu className="w-4 h-4 rotate-180" /> : <Menu className="w-4 h-4" />}
+              title={isSidebarOpen ? "Cerrar menú" : "Abrir menú"}
+          />
+          <Button
+              onClick={() => setIsTransparent(!isTransparent)}
+              variant={isTransparent ? "primary" : "neutral"}
+              size="sm"
+              iconLeft={isTransparent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              title={isTransparent ? "Desactivar transparencia" : "Activar transparencia"}
+          />
+        </div>
+      </motion.div>
 
       <Sidebar 
           isOpen={isSidebarOpen} 
@@ -91,7 +102,10 @@ export default function ChatAIPage() {
             <div className="absolute top-[40%] left-[30%] w-[40vw] h-[40vw] bg-green-900/5 blur-[100px] rounded-full mix-blend-screen" />
           </div>
 
-          <main className="relative z-10 flex flex-col flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <main 
+            className="relative z-10 flex flex-col flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
+            style={{ WebkitAppRegion: 'no-drag' } as any}
+          >
             <div className="absolute top-0 right-4 sm:right-8 z-30 mt-4 flex gap-2">
               {hasMessages && (
                 <Button
@@ -111,9 +125,7 @@ export default function ChatAIPage() {
                 hasMessages ? 'opacity-100' : 'opacity-0 hidden'
               }`}
             >
-              {hasMessages && (
-                <div className="absolute top-0 left-0 right-0 h-8 sm:h-12 bg-gradient-to-b from-black to-transparent z-20 pointer-events-none" />
-              )}
+              {/* Gradient removed for full transparency */}
               <AnimatePresence initial={false} mode="popLayout">
                 {rendered}
               </AnimatePresence>
@@ -124,7 +136,7 @@ export default function ChatAIPage() {
             <motion.div
               layout
               initial={false}
-              className={`w-full flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${
+              className={`w-full flex flex-col items-center justify-center shrink-0 transition-all duration-500 ease-in-out ${
                 hasMessages ? 'py-4' : 'flex-1 pb-[20vh]'
               }`}
             >
@@ -136,7 +148,7 @@ export default function ChatAIPage() {
                     exit={{ opacity: 0, y: -10 }}
                     className="text-3xl sm:text-4xl font-medium text-white/90 mb-8 tracking-tight text-center"
                   >
-                    ¿En qué puedo ayudarte hoy?
+                    Ommagy
                   </motion.h1>
                 )}
               </AnimatePresence>

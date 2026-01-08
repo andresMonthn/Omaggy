@@ -36,7 +36,7 @@ export const ChatInput = memo(function ChatInput({
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Pregunta lo que quieras"
+          placeholder="Inicia la entrevista"
           className="flex-1 bg-transparent border-none outline-none text-gray-300 placeholder:text-neutral-500 text-base sm:text-lg py-3 sm:py-4 min-w-0"
           disabled={disabled}
         />

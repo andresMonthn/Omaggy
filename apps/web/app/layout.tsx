@@ -3,9 +3,7 @@
  * Función: Proveedores globales (tema, i18n, fuentes), UI compartida y metadatos.
  */
 import { headers } from 'next/headers';
-
 import { Toaster } from '@kit/ui/sonner';
-
 import { RootProviders } from '~/components/root-providers';
 import { getFontsClassName } from '~/lib/fonts';
 import ChatBotOverlayGuard from "~/components/chat-bot/chatbot-overlay-guard";
@@ -15,7 +13,6 @@ import { generateRootMetadata } from '~/lib/root-metdata';
 import { getRootTheme } from '~/lib/root-theme';
 
 import '../styles/globals.css';
-
 export const generateMetadata = () => {
   return generateRootMetadata();
 };
@@ -31,8 +28,8 @@ export default async function RootLayout({
   const nonce = await getCspNonce();
 
   return (
-    <html lang={language} className={className}>
-      <body>
+    <html lang={language} className={`${className} bg-transparent`}>
+      <body className="bg-transparent">
         <RootProviders theme={theme} lang={language} nonce={nonce}>
           {children}
           {/* Overlay del ChatBot visible solo en rutas bajo /home */}

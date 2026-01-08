@@ -1,14 +1,8 @@
-window.addEventListener('DOMContentLoaded', () => {
-  /**
-   * @param {string} selector
-   * @param {string} text
-   */
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
+const { contextBridge, ipcRenderer } = require('electron')
 
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type] || 'stocjs')
-  }
+contextBridge.exposeInMainWorld('electron', {
+  /**
+   * @param {boolean} enabled
+   */
+  toggleTransparency: (enabled) => ipcRenderer.send('toggle-transparency', enabled)
 })
