@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Download, Menu, Eye, EyeOff } from 'lucide-react';
+import { Download, Menu, Eye, EyeOff, AudioLines } from 'lucide-react';
 
 import { useChat } from './hooks/useChat';
 import { MessageBubble } from './components/MessageBubble';
@@ -17,6 +17,8 @@ export default function ChatAIPage() {
   const hasMessages = messages.length > 0;
   const [isTransparent, setIsTransparent] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [hasAudioBridge, setHasAudioBridge] = useState(false);
+  const [isSystemCapturing, setIsSystemCapturing] = useState(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
@@ -32,6 +34,24 @@ export default function ChatAIPage() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const check = () => {
+      if (typeof window !== 'undefined' && (window as any).audio) {
+        setHasAudioBridge(true);
+      } else {
+        setHasAudioBridge(false);
+        setIsSystemCapturing(false);
+      }
+    };
+
+    check();
+
+    window.addEventListener('focus', check);
+    return () => {
+      window.removeEventListener('focus', check);
+    };
   }, []);
 
   const rendered = useMemo(() => {
@@ -71,18 +91,62 @@ export default function ChatAIPage() {
       >
         <div className="flex gap-2">
           <Button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              variant="neutral"
-              size="sm"
-              iconLeft={isSidebarOpen ? <Menu className="w-4 h-4 rotate-180" /> : <Menu className="w-4 h-4" />}
-              title={isSidebarOpen ? "Cerrar menú" : "Abrir menú"}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            variant="neutral"
+            size="sm"
+            iconLeft={
+              isSidebarOpen ? (
+                <Menu className="w-4 h-4 rotate-180" />
+              ) : (
+                <Menu className="w-4 h-4" />
+              )
+            }
+            title={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
           />
           <Button
-              onClick={() => setIsTransparent(!isTransparent)}
-              variant={isTransparent ? "primary" : "neutral"}
-              size="sm"
-              iconLeft={isTransparent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              title={isTransparent ? "Desactivar transparencia" : "Activar transparencia"}
+            onClick={() => setIsTransparent(!isTransparent)}
+            variant={isTransparent ? 'primary' : 'neutral'}
+            size="sm"
+            iconLeft={
+              isTransparent ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )
+            }
+            title={
+              isTransparent ? 'Desactivar transparencia' : 'Activar transparencia'
+            }
+          />
+          <Button
+            onClick={() => {
+              if (!hasAudioBridge) {
+                return;
+              }
+
+              if (!(window as any).audio) {
+                return;
+              }
+
+              if (!isSystemCapturing) {
+                (window as any).audio.start({ source: 'system' });
+                setIsSystemCapturing(true);
+              } else {
+                (window as any).audio.stop();
+                setIsSystemCapturing(false);
+              }
+            }}
+            disabled={!hasAudioBridge}
+            variant={isSystemCapturing ? 'primary' : 'neutral'}
+            size="sm"
+            iconLeft={<AudioLines className="w-4 h-4" />}
+            title={
+              !hasAudioBridge
+                ? 'Captura de audio disponible solo en la app de escritorio'
+                : isSystemCapturing
+                ? 'Detener captura de audio del sistema'
+                : 'Iniciar captura de audio del sistema'
+            }
           />
         </div>
       </motion.div>
@@ -122,7 +186,7 @@ export default function ChatAIPage() {
             <div
               ref={scrollRef}
               className={`flex-1 overflow-y-auto scroll-smooth py-6 space-y-6 ${
-                hasMessages ? 'opacity-100' : 'opacity-0 hidden'
+                hasMessages ? 'opacity-100 pb-32' : 'opacity-0 hidden'
               }`}
             >
               {/* Gradient removed for full transparency */}
@@ -137,7 +201,7 @@ export default function ChatAIPage() {
               layout
               initial={false}
               className={`w-full flex flex-col items-center justify-center shrink-0 transition-all duration-500 ease-in-out ${
-                hasMessages ? 'py-4' : 'flex-1 pb-[20vh]'
+                hasMessages ? 'fixed bottom-0 left-0 right-0 z-50 py-4' : 'flex-1 pb-[20vh]'
               }`}
             >
               <AnimatePresence>

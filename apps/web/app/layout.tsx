@@ -28,7 +28,7 @@ export default async function RootLayout({
   const nonce = await getCspNonce();
 
   return (
-    <html lang={language} className={`${className} bg-transparent`}>
+    <html lang={language} className={`${className} bg-transparent`} suppressHydrationWarning>
       <body className="bg-transparent">
         <RootProviders theme={theme} lang={language} nonce={nonce}>
           {children}
