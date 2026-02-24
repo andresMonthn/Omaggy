@@ -12,12 +12,12 @@ start "" powershell -WindowStyle Minimized -Command "ollama serve"
 :: 2. Iniciar API Brain (Cerebro Python)
 echo [2/4] Iniciando API Brain (Python Microservice)...
 :: Navegamos a la carpeta del servicio, activamos venv y corremos uvicorn en segundo plano
-start "" powershell -WindowStyle Minimized -Command "cd 'C:\Users\Admin\Documents\.atomLogic\ai-core-service'; .\.venv\Scripts\Activate.ps1; cd ai-brain; uvicorn app.main:app --reload"
+start "" powershell -WindowStyle Minimized -Command "cd 'F:\Programathon\.atomlogic\ai-brain-001\ai-brain'; .\.venv\Scripts\Activate.ps1; cd ai-brain; uvicorn app.main:app --reload"
 
 :: 3. Iniciar Servidor Web (Frontend)
 echo [3/4] Iniciando Servidor Web (Next.js)...
 echo       Nota: Ejecutando en modo desarrollo (pnpm dev --filter web).
-start "" powershell -WindowStyle Minimized -Command "cd 'C:\Users\Admin\Documents\.atomLogic\Omaggy'; pnpm dev --filter web"
+start "" powershell -WindowStyle Minimized -Command "cd '%~dp0'; pnpm dev --filter web"
 
 echo.
 echo [4/4] Esperando a que los servicios esten listos...
@@ -51,8 +51,8 @@ echo       Lanzando Aplicacion de Escritorio...
 echo ===================================================
 echo.
 
-:: Lanzar Electron y esperar a que se cierre
-start /wait electron\dist-alt\Omaggy-win32-x64\Omaggy.exe
+:: Lanzar Electron empaquetado (.exe) y esperar a que se cierre
+start "" /wait "%~dp0electron\dist_v2\Omaggy-win32-x64\Omaggy.exe"
 
 echo.
 echo ===================================================

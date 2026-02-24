@@ -30,4 +30,17 @@ contextBridge.exposeInMainWorld('audio', {
       ipcRenderer.removeListener('stt:partial', handler)
     }
   },
+  /**
+   * @param {(message: string) => void} cb
+   * @returns {() => void}
+   */
+  onError: (cb) => {
+    const handler = (_event, m) => {
+      cb(typeof m === 'string' ? m : String(m))
+    }
+    ipcRenderer.on('stt:error', handler)
+    return () => {
+      ipcRenderer.removeListener('stt:error', handler)
+    }
+  },
 })

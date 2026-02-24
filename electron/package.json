@@ -7,7 +7,10 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-packager . --out=dist --overwrite",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "test:stt": "node stt/tests/transcribe.test.js",
+    "test:audio": "set OMAGGY_AUDIO_TEST=1&& electron .",
+    "test:stt:ui": "set OMAGGY_STT_UI_TEST=1&& electron ."
   },
   "author": "Omaggy",
   "license": "ISC",
@@ -21,7 +24,9 @@
     "files": [
       "main.js",
       "preload.js",
-      "package.json"
+      "package.json",
+      "audio/**/*",
+      "stt/**/*"
     ],
     "win": {
       "target": "nsis",

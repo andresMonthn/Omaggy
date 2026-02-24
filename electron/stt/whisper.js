@@ -19,7 +19,7 @@ let pendingBuffer = Buffer.alloc(0)
 /** @type {NodeJS.Timeout | null} */
 let flushTimer = null
 
-const BYTES_PER_SECOND = 16000 * 2 // 16 kHz, 16-bit mono
+const BYTES_PER_SECOND = 16000 * 2
 const MIN_BATCH_MS = 800
 const MAX_BATCH_MS = 2000
 
@@ -93,26 +93,29 @@ async function transcribe(buffer, options) {
   const endpoint =
     opts.endpoint ||
     process.env.WHISPER_API_URL ||
-    'http://127.0.0.1:8000/v1/stt/whisper'
+    'http://127.0.0.1:8000/v1/speech/transcribe'
 
   const apiKey = opts.apiKey || process.env.WHISPER_API_KEY || ''
 
-  const headers = {
-    'Content-Type': 'application/octet-stream',
-    Accept: 'application/json',
-  }
+  const headers = {}
 
   if (apiKey) {
     // @ts-ignore
     headers.Authorization = `Bearer ${apiKey}`
   }
 
-  // @ts-ignore Node 18+ tiene fetch global
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers,
-    body: /** @type {any} */ (buffer),
-  })
+  const wav = pcmToWav(buffer, 16000, 1)
+
+  // @ts-ignore
+  const form = new FormData()
+  // @ts-ignore
+  const blob = new Blob([wav], { type: 'audio/wav' })
+  // @ts-ignore
+  form.append('file', blob, 'audio.wav')
+  form.append('language', opts.language || config.language || 'es')
+
+  // @ts-ignore
+  const res = await fetch(endpoint, { method: 'POST', headers, body: form })
 
   if (!res.ok) {
     const bodyText = await res.text().catch(() => '')
@@ -125,8 +128,38 @@ async function transcribe(buffer, options) {
   return json.text || json.transcript || ''
 }
 
+/**
+ * @param {Buffer} pcm
+ * @param {number} sampleRate
+ * @param {number} channels
+ */
+function pcmToWav(pcm, sampleRate, channels) {
+  const blockAlign = channels * 2
+  const byteRate = sampleRate * blockAlign
+  const dataSize = pcm.length
+  const buffer = Buffer.alloc(44 + dataSize)
+
+  buffer.write('RIFF', 0)
+  buffer.writeUInt32LE(36 + dataSize, 4)
+  buffer.write('WAVE', 8)
+  buffer.write('fmt ', 12)
+  buffer.writeUInt32LE(16, 16)
+  buffer.writeUInt16LE(1, 20)
+  buffer.writeUInt16LE(channels, 22)
+  buffer.writeUInt32LE(sampleRate, 24)
+  buffer.writeUInt32LE(byteRate, 28)
+  buffer.writeUInt16LE(blockAlign, 32)
+  buffer.writeUInt16LE(16, 34)
+  buffer.write('data', 36)
+  buffer.writeUInt32LE(dataSize, 40)
+  pcm.copy(buffer, 44)
+
+  return buffer
+}
+
 module.exports = {
   init,
   send,
   transcribe,
+  pcmToWav,
 }

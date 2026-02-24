@@ -11,7 +11,7 @@ import { Button } from './components/Button';
 import { Sidebar } from './Sidebar';
 
 export default function ChatAIPage() {
-  const { messages, pending, send, downloadConversation } = useChat();
+  const { messages, pending, send, downloadConversation, clearConversation, sessionId } = useChat();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const deferredMessages = useDeferredValue(messages);
   const hasMessages = messages.length > 0;
@@ -81,81 +81,40 @@ export default function ChatAIPage() {
         style={{ WebkitAppRegion: 'drag' } as any} 
       />
 
-      {/* Sidebar Toggle - Dynamic position based on sidebar state */}
-      <motion.div 
+      {/* Sidebar Toggle - solo botón de menú */}
+      <motion.div
         className="absolute top-4 z-50"
         initial={false}
         animate={{ left: isSidebarOpen ? 280 + 16 : 16 }}
         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
         style={{ WebkitAppRegion: 'no-drag' } as any}
       >
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            variant="neutral"
-            size="sm"
-            iconLeft={
-              isSidebarOpen ? (
-                <Menu className="w-4 h-4 rotate-180" />
-              ) : (
-                <Menu className="w-4 h-4" />
-              )
-            }
-            title={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
-          />
-          <Button
-            onClick={() => setIsTransparent(!isTransparent)}
-            variant={isTransparent ? 'primary' : 'neutral'}
-            size="sm"
-            iconLeft={
-              isTransparent ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )
-            }
-            title={
-              isTransparent ? 'Desactivar transparencia' : 'Activar transparencia'
-            }
-          />
-          <Button
-            onClick={() => {
-              if (!hasAudioBridge) {
-                return;
-              }
-
-              if (!(window as any).audio) {
-                return;
-              }
-
-              if (!isSystemCapturing) {
-                (window as any).audio.start({ source: 'system' });
-                setIsSystemCapturing(true);
-              } else {
-                (window as any).audio.stop();
-                setIsSystemCapturing(false);
-              }
-            }}
-            disabled={!hasAudioBridge}
-            variant={isSystemCapturing ? 'primary' : 'neutral'}
-            size="sm"
-            iconLeft={<AudioLines className="w-4 h-4" />}
-            title={
-              !hasAudioBridge
-                ? 'Captura de audio disponible solo en la app de escritorio'
-                : isSystemCapturing
-                ? 'Detener captura de audio del sistema'
-                : 'Iniciar captura de audio del sistema'
-            }
-          />
-        </div>
+        <Button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          variant="neutral"
+          size="sm"
+          iconLeft={
+            isSidebarOpen ? (
+              <Menu className="w-4 h-4 rotate-180" />
+            ) : (
+              <Menu className="w-4 h-4" />
+            )
+          }
+          title={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
+        />
       </motion.div>
 
-      <Sidebar 
-          isOpen={isSidebarOpen} 
-          setIsOpen={setIsSidebarOpen} 
-          isTransparent={isTransparent}
-          setIsTransparent={setIsTransparent}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        isTransparent={isTransparent}
+        setIsTransparent={setIsTransparent}
+        hasMessages={hasMessages}
+        onDownloadConversation={downloadConversation}
+        onClearConversation={clearConversation}
+        hasAudioBridge={hasAudioBridge}
+        isSystemCapturing={isSystemCapturing}
+        setIsSystemCapturing={setIsSystemCapturing}
       />
 
       <div className="flex-1 flex flex-col relative min-w-0 transition-all duration-300">
@@ -166,22 +125,11 @@ export default function ChatAIPage() {
             <div className="absolute top-[40%] left-[30%] w-[40vw] h-[40vw] bg-green-900/5 blur-[100px] rounded-full mix-blend-screen" />
           </div>
 
-          <main 
+          <main
+            key={sessionId}
             className="relative z-10 flex flex-col flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
             style={{ WebkitAppRegion: 'no-drag' } as any}
           >
-            <div className="absolute top-0 right-4 sm:right-8 z-30 mt-4 flex gap-2">
-              {hasMessages && (
-                <Button
-                  onClick={downloadConversation}
-                  variant="neutral"
-                  size="sm"
-                  iconLeft={<Download className="w-4 h-4" />}
-                  title="Descargar conversación"
-                />
-              )}
-            </div>
-            
             {/* Messages Area */}
             <div
               ref={scrollRef}

@@ -7,6 +7,7 @@ import { fetchChatResponse } from '../lib/chat-api';
 export function useChat() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [pending, setPending] = useState(false);
+  const [sessionId, setSessionId] = useState(0);
 
   const send = useCallback(async (text: string) => {
     const user: Msg = { id: uid(), role: 'user', content: text };
@@ -48,5 +49,10 @@ export function useChat() {
     downloadFn(messages);
   }, [messages]);
 
-  return { messages, pending, send, downloadConversation };
+  const clearConversation = useCallback(() => {
+    setMessages([]);
+    setSessionId((id) => id + 1);
+  }, []);
+
+  return { messages, pending, send, downloadConversation, clearConversation, sessionId };
 }

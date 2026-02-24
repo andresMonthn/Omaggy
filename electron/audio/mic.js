@@ -30,11 +30,20 @@ function createCaptureWindow() {
   })
 }
 
-// IPC Listeners (Singleton pattern for the module)
-ipcMain.on('mic:chunk', (event, buffer) => {
-  if (running) {
-    whisperStt.send(buffer)
+ipcMain.on('mic:chunk', (event, data) => {
+  if (!running) return
+  let buffer = null
+  if (Buffer.isBuffer(data)) {
+    buffer = data
+  } else if (data instanceof ArrayBuffer) {
+    buffer = Buffer.from(new Uint8Array(data))
+  } else if (ArrayBuffer.isView(data)) {
+    buffer = Buffer.from(data.buffer)
   }
+  if (!buffer || buffer.length === 0) {
+    return
+  }
+  whisperStt.send(buffer)
 })
 
 ipcMain.on('mic:error', (event, err) => {
